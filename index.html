@@ -236,6 +236,10 @@ footer a{color:var(--orange);text-decoration:underline;cursor:pointer}
         <input type="number" id="pot" value="3.45" min="0.1" step="0.01" placeholder="Ej: 3.45">
       </div>
       <div class="fg">
+        <label>Días de facturación</label>
+        <input type="number" id="diasFact" value="30" min="1" step="1" placeholder="Ej: 30">
+      </div>
+      <div class="fg">
         <label>Consumo mensual (kWh)</label>
         <input type="number" id="kwhluz" value="250" min="0" placeholder="Ej: 250">
       </div>
@@ -449,6 +453,7 @@ function calcular() {
   }
 
   var pot    = parseFloat(document.getElementById('pot').value)    || 3.45;
+  var diasFact = parseFloat(document.getElementById('diasFact').value) || 30;
   var kwhl   = parseFloat(document.getElementById('kwhluz').value) || 0;
   var excv   = document.getElementById('solar').value==='si'
                ? (parseFloat(document.getElementById('exc').value)||0) : 0;
@@ -474,7 +479,7 @@ function calcular() {
 
     if (iL) {
       if (t.luz) {
-        var dias  = 30;
+        var dias  = diasFact;
         var cPot  = t.luz.pot * pot * dias;
         var cKwh  = t.luz.kwh * kwhl;
         var dExc  = t.luz.exc * excv;
@@ -562,7 +567,7 @@ function buildCard(e, lR, gR, isW, maxT) {
 
   var bd = '';
   if (lR) {
-    bd += brow('Potencia (30 días)', fmt(lR.cPot));
+    bd += brow('Potencia ('+(parseFloat(document.getElementById('diasFact').value)||30)+' días)', fmt(lR.cPot));
     bd += brow('Energía luz', fmt(lR.cKwh));
     if (lR.dExc>0) bd += browG('Excedentes solar', '−'+fmt(lR.dExc));
     if (lR.impE>0) bd += brow('Imp. eléctrico 5,11%', fmt(lR.impE));
@@ -738,7 +743,7 @@ function generarPDF(items,filename){
     var tot=(lR?lR.total:0)+(gR?gR.total:0);
     var rows=[];
     if(lR){
-      rows.push({l:'Potencia (30 días)',v:fmt(lR.cPot)});
+      rows.push({l:'Potencia ('+(parseFloat(document.getElementById('diasFact').value)||30)+' días)',v:fmt(lR.cPot)});
       rows.push({l:'Energía luz',v:fmt(lR.cKwh)});
       if(lR.dExc>0)rows.push({l:'Excedentes solar',v:'− '+fmt(lR.dExc),g:true});
       if(lR.impE>0)rows.push({l:'Imp. eléctrico 5,11%',v:fmt(lR.impE)});
