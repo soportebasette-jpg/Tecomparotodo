@@ -410,9 +410,16 @@ var T = {
                luz:{kwh:0.129,pot:0.178,exc:0.060},
                gas:{RL1:{kwh:0.060700,fijo:3.930000},RL2:{kwh:0.058600,fijo:8.110000}} },
   total:     { n:'Total Energies', c:'#FF6600', l:'logo_totalenergy.png',
-               luz:{kwh:0.1190,pot:0.158,exc:0.070},
+               luz:{kwh:0.1190,pot:0.16244,exc:0.070},
                gas:{RL1:{kwh:0.073,fijo:9.500},RL2:{kwh:0.071,fijo:14.500}},
-               pLuz:'⚠️ Sin batería virtual · 🎁 DAZN Premium gratis' },
+               reqConsumoMax:4000,
+               reqPotenciaMax:4,
+               pLuz:'⚠️ Sin batería virtual · Sin DAZN · Solo potencia &lt;4 kW y consumo &lt;4.000 kWh/año' },
+  total2:    { n:'Total Energies (DAZN)', c:'#FF6600', l:'logo_totalenergy.png',
+               luz:{kwh:0.129,pot:0.25194,exc:0.070},
+               gas:{RL1:{kwh:0.073,fijo:9.500},RL2:{kwh:0.071,fijo:14.500}},
+               reqPotenciaMax:4,
+               pLuz:'🎁 DAZN Premium GRATIS (Fútbol o Motor) · ⚠️ Sin batería virtual · Solo potencia &lt;4 kW' },
   repsol:    { n:'Repsol',         c:'#E8001C', l:'logo_repsol.png',
                luz:{kwh:0.119,pot:0.198,exc:0.060},
                gas:null,
@@ -516,6 +523,8 @@ function calcular() {
 
   var emps = Object.keys(T);
   var res  = {};
+  var kwhAnual = kwhl * (365/diasFact); // estimación de consumo anual a partir del consumo y días introducidos
+  var restringidos = [];
 
   for (var i=0; i<emps.length; i++) {
     var e = emps[i];
@@ -523,7 +532,7 @@ function calcular() {
     var lR = null, gR = null;
 
     if (iL) {
-      if (t.luz) {
+      if (t.luz && !(t.reqConsumoMax && kwhAnual >= t.reqConsumoMax) && !(t.reqPotenciaMax && pot >= t.reqPotenciaMax)) {
         var dias  = diasFact;
         var cPot  = t.luz.pot * pot * dias;
         var cKwh  = t.luz.kwh * kwhl;
@@ -545,6 +554,13 @@ function calcular() {
         var tot2 = b2 + impH + alqg;
         gR = { cKwh:cK2, cFijo:cF, impH:impH, alqg:alqg, total:tot2 };
       }
+    }
+
+    if (iL && ((t.reqConsumoMax && kwhAnual >= t.reqConsumoMax) || (t.reqPotenciaMax && pot >= t.reqPotenciaMax))) {
+      var motivos = [];
+      if (t.reqConsumoMax && kwhAnual >= t.reqConsumoMax) motivos.push('consumo &lt;' + t.reqConsumoMax + ' kWh/año');
+      if (t.reqPotenciaMax && pot >= t.reqPotenciaMax) motivos.push('potencia &lt;' + t.reqPotenciaMax + ' kW');
+      restringidos.push(t.n + ' (tarifa solo para ' + motivos.join(' y ') + ')');
     }
 
     var activo = (iL && lR!==null) || (iG && gR!==null);
@@ -593,6 +609,7 @@ function calcular() {
                       .map(function(k){ return T[k].n; });
     if (sinGas.length) notas.push('⚠️ '+sinGas.join(', ')+(sinGas.length>1?' no disponen':' no dispone')+' de tarifa gas.');
   }
+  if (iL && restringidos.length) notas.push('🚫 ' + restringidos.join(' · ') + '.');
 
   document.getElementById('rsub').innerHTML = 'Comparativa para <strong>'+sub+'</strong>';
   document.getElementById('nbox').innerHTML = notas.join(' · ');
