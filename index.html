@@ -412,9 +412,8 @@ var T = {
   total:     { n:'Total Energies', c:'#FF6600', l:'logo_totalenergy.png',
                luz:{kwh:0.1190,pot:0.16244,exc:0.070},
                gas:{RL1:{kwh:0.073,fijo:9.500},RL2:{kwh:0.071,fijo:14.500}},
-               reqConsumoMax:4000,
                reqPotenciaMax:4,
-               pLuz:'⚠️ Sin batería virtual · Sin DAZN · Solo potencia &lt;4 kW y consumo &lt;4.000 kWh/año' },
+               pLuz:'⚠️ Sin batería virtual · Sin DAZN · Solo para potencia contratada &lt;4 kW' },
   total2:    { n:'Total Energies (DAZN)', c:'#FF6600', l:'logo_totalenergy.png',
                luz:{kwh:0.129,pot:0.25194,exc:0.070},
                gas:{RL1:{kwh:0.073,fijo:9.500},RL2:{kwh:0.071,fijo:14.500}},
@@ -428,7 +427,7 @@ var T = {
                luz:{kwh:0.124,pot:0.179,exc:0.050},
                gas:{RL1:{kwh:0.095728,fijo:6.250},RL2:{kwh:0.090965,fijo:11.180}} },
   niba:      { n:'Niba',           c:'#2E7D32', l:'logo_niba.png',
-               luz:{kwh:0.115,pot:0.178,exc:0.060},
+               luz:{kwh:0.119,pot:0.182,exc:0.060},
                gas:null },
   endesa:    { n:'Endesa',         c:'#00B451', l:'logo_endesa.png',
                luz:{kwh:0.137131,pot:0.187332,exc:0.060},
@@ -523,7 +522,6 @@ function calcular() {
 
   var emps = Object.keys(T);
   var res  = {};
-  var kwhAnual = kwhl * (365/diasFact); // estimación de consumo anual a partir del consumo y días introducidos
   var restringidos = [];
 
   for (var i=0; i<emps.length; i++) {
@@ -532,7 +530,7 @@ function calcular() {
     var lR = null, gR = null;
 
     if (iL) {
-      if (t.luz && !(t.reqConsumoMax && kwhAnual >= t.reqConsumoMax) && !(t.reqPotenciaMax && pot >= t.reqPotenciaMax)) {
+      if (t.luz && !(t.reqPotenciaMax && pot >= t.reqPotenciaMax)) {
         var dias  = diasFact;
         var cPot  = t.luz.pot * pot * dias;
         var cKwh  = t.luz.kwh * kwhl;
@@ -556,11 +554,8 @@ function calcular() {
       }
     }
 
-    if (iL && ((t.reqConsumoMax && kwhAnual >= t.reqConsumoMax) || (t.reqPotenciaMax && pot >= t.reqPotenciaMax))) {
-      var motivos = [];
-      if (t.reqConsumoMax && kwhAnual >= t.reqConsumoMax) motivos.push('consumo &lt;' + t.reqConsumoMax + ' kWh/año');
-      if (t.reqPotenciaMax && pot >= t.reqPotenciaMax) motivos.push('potencia &lt;' + t.reqPotenciaMax + ' kW');
-      restringidos.push(t.n + ' (tarifa solo para ' + motivos.join(' y ') + ')');
+    if (iL && t.reqPotenciaMax && pot >= t.reqPotenciaMax) {
+      restringidos.push(t.n + ' (tarifa solo para potencia contratada &lt;' + t.reqPotenciaMax + ' kW)');
     }
 
     var activo = (iL && lR!==null) || (iG && gR!==null);
