@@ -410,18 +410,20 @@ var T = {
                luz:{kwh:0.139,pot:0.198,exc:0.060},
                gas:{RL1:{kwh:0.077900,fijo:3.930000},RL2:{kwh:0.075800,fijo:8.110000}} },
   total:     { n:'Total Energies', c:'#FF6600', l:'logo_totalenergy.png',
-               luz:{kwh:0.1190,pot:0.158,exc:0.070},
-               gas:{RL1:{kwh:0.073,fijo:9.500},RL2:{kwh:0.071,fijo:14.500}},
+               luz:{kwh:0.0999,pot:0.172548,exc:0.070},
+               gas:{RL1:{kwh:0.0839,fijo:7.000},RL2:{kwh:0.0819,fijo:12.000}},
+               gasDuo:{RL1:{kwh:0.0789,fijo:7.000},RL2:{kwh:0.0769,fijo:12.000}},
                reqPotenciaMax:4,
                pLuz:'⚠️ Sin batería virtual · Sin DAZN · Solo para potencia contratada &lt;4 kW' },
   total2:    { n:'Total Energies (DAZN)', c:'#FF6600', l:'logo_totalenergy.png',
                luz:{kwh:0.129,pot:0.25194,exc:0.070},
-               gas:{RL1:{kwh:0.073,fijo:9.500},RL2:{kwh:0.071,fijo:14.500}},
+               gas:{RL1:{kwh:0.0839,fijo:7.000},RL2:{kwh:0.0819,fijo:12.000}},
+               gasDuo:{RL1:{kwh:0.0789,fijo:7.000},RL2:{kwh:0.0769,fijo:12.000}},
                reqPotenciaMax:4,
                pLuz:'🎁 DAZN Premium GRATIS (Fútbol o Motor) · ⚠️ Sin batería virtual · Solo potencia &lt;4 kW' },
   repsol:    { n:'Repsol',         c:'#E8001C', l:'logo_repsol.png',
-               luz:{kwh:0.129,pot:0.180,exc:0.060},
-               gas:null,
+               luz:{kwh:0.129,pot:0.180274,exc:0.060},
+               gas:{RL1:{kwh:0.0849,fijo:6.900},RL2:{kwh:0.0849,fijo:13.900}},
                pLuz:'⛽ 20 € regalo en gasolina Waylet' },
   iberdrola: { n:'Iberdrola',      c:'#006EB6', l:'logo_iberdrola.png',
                luz:{kwh:0.1652264,pot:0.195835,exc:0.050},
@@ -548,8 +550,11 @@ function calcular() {
     }
 
     if (iG) {
-      if (t.gas) {
-        var g2   = t.gas[tgas];
+      // En luz + gas, si la luz de la compañía no aplica (restricción de potencia) no se ofrece el conjunto:
+      // evita mostrar solo el gas como si fuera la oferta completa.
+      var luzBloqueada = iL && t.luz && t.reqPotenciaMax && pot >= t.reqPotenciaMax;
+      if (t.gas && !luzBloqueada) {
+        var g2   = (iL && t.gasDuo) ? t.gasDuo[tgas] : t.gas[tgas];
         var cK2  = g2.kwh * kwhg;
         var cF   = g2.fijo;
         var b2   = cK2 + cF;
@@ -608,6 +613,7 @@ function calcular() {
     var sinGas = emps.filter(function(k){ return T[k].gas===null && !activos.includes(k); })
                       .map(function(k){ return T[k].n; });
     if (sinGas.length) notas.push('⚠️ '+sinGas.join(', ')+(sinGas.length>1?' no disponen':' no dispone')+' de tarifa gas.');
+    if (activos.indexOf('repsol')>=0 && res.repsol.gR) notas.push('⚠️ Repsol: tarifa de gas INDEXADA (el término variable cambia con el mercado).');
   }
   if (iL && restringidos.length) notas.push('🚫 ' + restringidos.join(' · ') + '.');
 
