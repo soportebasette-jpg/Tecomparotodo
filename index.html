@@ -7,6 +7,10 @@
 <meta name="description" content="Compara gratis las tarifas de luz y gas de Naturgy, Gana Energía, Total Energies, Repsol, Iberdrola y Endesa. Herramienta oficial de TecomparoTodo, disponible en toda España. Cambia de compañía en menos de 1 minuto.">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <link rel="canonical" href="https://tarifasenergia.tecomparotodo.es/">
+<!-- Favicon -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon-192.png">
 
 <!-- Google tag (gtag.js) — mismo ID que la web principal, para no fragmentar los datos -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4SHHPR989H"></script>
@@ -156,7 +160,6 @@ main{max-width:960px;margin:0 auto;padding:22px 13px 100px}
   justify-content:center;font-size:.6rem;font-weight:800;color:#fff;flex-shrink:0}
 .cname{font-size:.88rem;font-weight:700;color:var(--dark)}
 .ctype{font-size:.68rem;color:var(--gray)}
-.ckwh{font-size:.7rem;font-weight:600;color:var(--dark);margin-top:2px}
 .pbox{text-align:center;margin-bottom:10px}
 .pbox .amt{font-size:1.85rem;font-weight:800;color:var(--dark);line-height:1}
 .pbox .sub{font-size:.68rem;color:var(--gray);margin-top:2px}
@@ -411,7 +414,7 @@ var T = {
                luz:{kwh:0.139,pot:0.198,exc:0.060},
                gas:{RL1:{kwh:0.077900,fijo:3.930000},RL2:{kwh:0.075800,fijo:8.110000}} },
   total:     { n:'Total Energies', c:'#FF6600', l:'logo_totalenergy.png',
-               luz:{kwh:0.119,pot:0.172548,exc:0.070},
+               luz:{kwh:0.0999,pot:0.172548,exc:0.070},
                gas:{RL1:{kwh:0.0839,fijo:7.000},RL2:{kwh:0.0819,fijo:12.000}},
                gasDuo:{RL1:{kwh:0.0789,fijo:7.000},RL2:{kwh:0.0769,fijo:12.000}},
                reqPotenciaMax:4,
@@ -639,16 +642,6 @@ function buildCard(e, lR, gR, isW, maxT) {
   var diff = maxT - tot;
   var tipo = (lR&&gR)?'Luz + Gas':lR?'Electricidad':'Gas natural';
 
-  // Precio del kWh de energía bajo el nombre de la compañía
-  var pk = [];
-  if (lR && t.luz) pk.push((gR?'Luz: ':'')+fkwh(t.luz.kwh)+' €/kWh');
-  if (gR) {
-    var tg = document.getElementById('tgas').value;
-    var gS = (lR && t.gasDuo) ? t.gasDuo[tg] : t.gas[tg];
-    if (gS) pk.push('Gas: '+fkwh(gS.kwh)+' €/kWh');
-  }
-  var kwhLine = pk.length ? '<div class="ckwh">'+pk.join(' · ')+'</div>' : '';
-
   var bd = '';
   if (lR) {
     bd += brow('Potencia ('+(parseFloat(document.getElementById('diasFact').value)||30)+' días)', fmt(lR.cPot));
@@ -683,7 +676,7 @@ function buildCard(e, lR, gR, isW, maxT) {
       '<img class="clogo" src="'+t.l+'" alt="'+t.n+'" '+
         'onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
       '<div class="cfb" style="background:'+t.c+'">'+t.n.slice(0,3).toUpperCase()+'</div>'+
-      '<div><div class="cname">'+t.n+'</div><div class="ctype">'+tipo+'</div>'+kwhLine+'</div>'+
+      '<div><div class="cname">'+t.n+'</div><div class="ctype">'+tipo+'</div></div>'+
     '</div>'+
     '<div class="pbox"><div class="amt">'+fmt(tot)+'</div>'+
       '<div class="sub">estimado/mes (con imp., sin IVA)</div></div>'+
@@ -697,7 +690,6 @@ function brow(l,v)  { return '<div class="brow"><span class="l">'+l+'</span><spa
 function browG(l,v) { return '<div class="brow"><span class="l">'+l+'</span><span class="g">'+v+'</span></div>'; }
 function fmt(n)     { return n.toFixed(2).replace('.',',')+' €'; }
 function f2(n)      { return n.toFixed(2).replace('.',','); }
-function fkwh(n)    { return parseFloat(n.toFixed(6)).toString().replace('.',','); }
 
 // ============================================================
 //  COOKIES — sin localStorage, solo con variable + sessionStorage
