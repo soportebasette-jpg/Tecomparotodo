@@ -412,7 +412,7 @@ naturgy:     { n:'Naturgy',        c:'#00A651', logo:'logo_naturgy.png',
                gas:{RL1:{kwh:0.1010,fijo:5.33},RL2:{kwh:0.099,fijo:9.55}} },
   gana:      { n:'Gana Energía',   c:'#005BAC', l:'logo_gana.png',
                luz:{kwh:0.149,pot:0.198,exc:0.060},
-               gas:{RL1:{kwh:0.077900,fijo:3.930000},RL2:{kwh:0.075800,fijo:8.110000}} },
+               gas:{RL1:{kwh:0.0903,fijo:3.83},RL2:{kwh:0.0882,fijo:8.17}} },
   total:     { n:'Total Energies', c:'#FF6600', l:'logo_totalenergy.png',
                luz:{kwh:0.144,pot:0.208,exc:0.070},
                gas:{RL1:{kwh:0.0839,fijo:7.000},RL2:{kwh:0.0819,fijo:12.000}},
@@ -426,7 +426,7 @@ naturgy:     { n:'Naturgy',        c:'#00A651', logo:'logo_naturgy.png',
                reqPotenciaMax:4,
                pLuz:'🎁 DAZN Premium GRATIS (Fútbol o Motor) · ⚠️ Sin batería virtual · Solo potencia &lt;4 kW' },
   repsol:    { n:'Repsol',         c:'#E8001C', l:'logo_repsol.png',
-               luz:{kwh:0.149,pot:0.180,exc:0.060},
+               luz:{kwh:0.169,pot:0.180,exc:0.060},
                gas:{RL1:{kwh:0.0849,fijo:6.900},RL2:{kwh:0.0849,fijo:13.900}},
                pLuz:'⛽ 100 € regalo en gasolina Waylet al contratar la luz y 150€ al contratar luz + gas + SVA' },
   iberdrola: { n:'Iberdrola',      c:'#006EB6', l:'logo_iberdrola.png',
@@ -434,10 +434,10 @@ naturgy:     { n:'Naturgy',        c:'#00A651', logo:'logo_naturgy.png',
                gas:{RL1:{kwh:0.095728,fijo:6.250},RL2:{kwh:0.090965,fijo:11.180}},
                pLuz:'🌱 Precio fijo 24h · Energía 100% renovable' },
   niba:      { n:'Niba',           c:'#2E7D32', l:'logo_niba.png',
-               luz:{kwh:0.123,pot:0.182,exc:0.060},
-               gas:{RL1:{kwh:0.085,fijo:6.030},RL2:{kwh:0.089,fijo:11.300}} },
+               luz:{kwh:0.147,pot:0.198,exc:0.060},
+               gas:{RL1:{kwh:0.109,fijo:6.37},RL2:{kwh:0.119,fijo:11.37},RL3:{kwh:0.125,fijo:20.71}} },
   endesa:    { n:'Endesa',         c:'#00B451', l:'logo_endesa.png',
-               luz:{kwh:0.167,pot:0.187332,exc:0.060},
+               luz:{kwh:0.142,pot:0.187332,exc:0.060},
                gas:{RL1:{kwh:0.099900,fijo:7.643825},RL2:{kwh:0.099500,fijo:14.88}},
                pLuz:'10% de descuento el primer año' },
   nordy:     { n:'Nordy',          c:'#003B2F', l:'logo_nordy.png',
@@ -619,6 +619,7 @@ function calcular() {
                       .map(function(k){ return T[k].n; });
     if (sinGas.length) notas.push('⚠️ '+sinGas.join(', ')+(sinGas.length>1?' no disponen':' no dispone')+' de tarifa gas.');
     if (activos.indexOf('repsol')>=0 && res.repsol.gR) notas.push('⚠️ Repsol: tarifa de gas INDEXADA (el término variable cambia con el mercado).');
+    if (activos.indexOf('gana')>=0 && res.gana.gR) notas.push('⚠️ Gana Energía: tarifa de gas INDEXADA. Gastos de gestión: RL1 0,02 €/kWh · RL2 0,01 €/kWh.');
   }
   if (iL && restringidos.length) notas.push('🚫 ' + restringidos.join(' · ') + '.');
 
