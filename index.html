@@ -412,7 +412,7 @@ naturgy:     { n:'Naturgy',        c:'#00A651', logo:'logo_naturgy.png',
                gas:{RL1:{kwh:0.1010,fijo:5.33},RL2:{kwh:0.099,fijo:9.55}} },
   gana:      { n:'Gana Energía',   c:'#005BAC', l:'logo_gana.png',
                luz:{kwh:0.149,pot:0.198,exc:0.060},
-               gas:{RL1:{kwh:0.0903,fijo:3.83},RL2:{kwh:0.0882,fijo:8.17}} },
+               gas:{RL1:{kwh:0.1103,fijo:3.83},RL2:{kwh:0.0982,fijo:8.17}} },
   total:     { n:'Total Energies', c:'#FF6600', l:'logo_totalenergy.png',
                luz:{kwh:0.144,pot:0.208,exc:0.070},
                gas:{RL1:{kwh:0.0839,fijo:7.000},RL2:{kwh:0.0819,fijo:12.000}},
@@ -430,9 +430,9 @@ naturgy:     { n:'Naturgy',        c:'#00A651', logo:'logo_naturgy.png',
                gas:{RL1:{kwh:0.0849,fijo:6.900},RL2:{kwh:0.0849,fijo:13.900}},
                pLuz:'⛽ 100 € regalo en gasolina Waylet al contratar la luz y 150€ al contratar luz + gas + SVA' },
   iberdrola: { n:'Iberdrola',      c:'#006EB6', l:'logo_iberdrola.png',
-               luz:{kwh:0.1652264,pot:0.195835,exc:0.050},
+               luz:{kwh:0.13271,pot:0.2095,exc:0.050},
                gas:{RL1:{kwh:0.095728,fijo:6.250},RL2:{kwh:0.090965,fijo:11.180}},
-               pLuz:'🌱 Precio fijo 24h · Energía 100% renovable' },
+               pLuz:'🏠 Plan Especial Plus 15% · Oferta hasta el 15/11/2026 · Solo residenciales (sin CIF ni comunidades) · 0,1249 €/kWh con SVA' },
   niba:      { n:'Niba',           c:'#2E7D32', l:'logo_niba.png',
                luz:{kwh:0.147,pot:0.198,exc:0.060},
                gas:{RL1:{kwh:0.109,fijo:6.37},RL2:{kwh:0.119,fijo:11.37},RL3:{kwh:0.125,fijo:20.71}} },
@@ -619,7 +619,7 @@ function calcular() {
                       .map(function(k){ return T[k].n; });
     if (sinGas.length) notas.push('⚠️ '+sinGas.join(', ')+(sinGas.length>1?' no disponen':' no dispone')+' de tarifa gas.');
     if (activos.indexOf('repsol')>=0 && res.repsol.gR) notas.push('⚠️ Repsol: tarifa de gas INDEXADA (el término variable cambia con el mercado).');
-    if (activos.indexOf('gana')>=0 && res.gana.gR) notas.push('⚠️ Gana Energía: tarifa de gas INDEXADA. Gastos de gestión: RL1 0,02 €/kWh · RL2 0,01 €/kWh.');
+    if (activos.indexOf('gana')>=0 && res.gana.gR) notas.push('⚠️ Gana Energía: tarifa de gas INDEXADA.');
   }
   if (iL && restringidos.length) notas.push('🚫 ' + restringidos.join(' · ') + '.');
 
